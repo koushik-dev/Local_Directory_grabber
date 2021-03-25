@@ -2,18 +2,17 @@
   <div class="relative">
     <span
       class="font-bold text-4xl absolute my-4 transition-all duration-1000 ease-out"
-      :style="{opacity: volumeDisplay ? 1 : 0}">
-      <span class="material-icons mx-2">
-      volume_up
-      </span>
+      :style="{opacity: volumeDisplay ? 1 : 0}"
+    >
+      <span class="material-icons mx-2">volume_up</span>
       {{volume}}
     </span>
-    <video
-      controls
-      :autoplay="autoplay"
-      @keypress="keyControls"
-      @volumechange="volumeChange">
-      <source :src="`http://localhost:3000/video?path=${encodeURIComponent(this.src)}`" type="video/mp4">
+    <video controls :autoplay="autoplay" @keypress="keyControls" @volumechange="volumeChange">
+      <source
+        :src="`http://localhost:3000/video?path=${encodeURIComponent(this.src)}`"
+        type="video/mp4"
+      />
+      <!-- <track label="English" kind="subtitles" srclang="en" :src="`${encodeURIComponent(this.src).split('.mp4').join('.srt')}`" default> -->
       Your browser does not support the video tag.
     </video>
   </div>
@@ -34,6 +33,11 @@ export default {
       volumeDisplay: false
     }
   },
+  // created() {
+  //   let srt = document.createElement('script');
+  //   srt.setAttribute('src', './video.js');
+  //   document.head.appendChild(srt);
+  // },
   mounted() {
     document.querySelector('video').focus();
   },
@@ -41,6 +45,7 @@ export default {
     volumeChange({ target: { volume }}) {
       this.volumeDisplay = true;
       this.volume = parseInt(volume*100) + '%';
+      setTimeout(() => this.volumeDisplay = false, 1000)
     },
     keyControls(e) {
       e.preventDefault();
@@ -88,7 +93,11 @@ export default {
           }
           break;
         case "f": //fullscreen
-          e.target.webkitRequestFullscreen();
+          if(document.fullscreenElement) {
+            e.target.webkitExitFullScreen();
+          } else {
+            e.target.webkitRequestFullscreen();
+          }          
           break;
         case "z": // close
           this.$emit('close');
@@ -102,6 +111,13 @@ export default {
         case "m": // mute
           e.target.muted = !e.target.muted
           break;
+        case "p": // picture-in-picture
+          if (document.pictureInPictureElement) {
+            document.exitPictureInPicture();
+          } else {
+            e.target.requestPictureInPicture();
+          }          
+          break;
         default:
           break;
       }
@@ -112,5 +128,4 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-
 </style>

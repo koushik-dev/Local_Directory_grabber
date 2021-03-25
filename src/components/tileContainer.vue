@@ -1,16 +1,16 @@
 <template>
 <div>
-    <div class="grid grid-cols-5">
+    <div class="grid xs:grid-cols-1 md:grid-cols-3 lg:grid-cols-5">
         <Tile
             :isFolder="true"
             :content="value"
-            v-for="value in contents['folders']"
+            v-for="value in getContents('folders')"
             :key="value"
             @folder-clk="folderClick" />
         <Tile
             :isFolder="false"
             :content="value"
-            v-for="value in contents['files']"
+            v-for="value in getContents('files')"
             :key="value"
             @vid-preview="videoPreview" />
     </div>
@@ -47,6 +47,9 @@ export default {
         },
         closeVid() {
             this.isVidPreview = false;
+        },
+        getContents(type) {
+            return this.contents[type]
         }
     }
 }

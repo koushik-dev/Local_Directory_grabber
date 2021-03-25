@@ -1,5 +1,8 @@
 <template>
   <div id="app">
+    <header class="bg-red-400">
+      <h1 class="text-4xl lg:text-6xl font-bold text-right px-6">Folder View</h1>
+    </header>
     <router-view/>
   </div>
 </template>
